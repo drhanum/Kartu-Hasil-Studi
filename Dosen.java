@@ -1,20 +1,170 @@
+import java.util.Arrays;
+
 public class Dosen extends Pengguna {
 
+    // ATTRIBUTES
     private String nidn;
-    private String mataKuliahDiampu;
+    private String[] mataKuliahDiampu; // SATU DOSEN DAPAT MENGAMPU LEBIH DARI SATU MATKUL
+    private int[][][] nilaiMahasiswa; // GUNAKAN INDEKS DARI mataKuliahDiampu UNTUK MENGAKSES NILAI-NILAI MAHASISWA
+    // FORMAT NIM, TUGAS, UTS, UAS
 
-    public Dosen(String username, String password, String nama,
-                 String nidn, String mataKuliahDiampu) {
+    // CONSTRUCTOR LENGKAP DENGAN LIST MATA KULIAH DAN ARRAY DATA NILAI MAHASISWA SESUAI FORMAT
+    public Dosen(String username, String password, String nama, String nidn, String[] mataKuliahDiampu, int[][][] nilaiMahasiswa) {
         super(username, password, nama);
         this.nidn = nidn;
         this.mataKuliahDiampu = mataKuliahDiampu;
+        this.nilaiMahasiswa = nilaiMahasiswa;
+    }
+    // CONSTRUCTOR DENGAN LIST MATA KULIAH
+    public Dosen(String username, String password, String nama, String nidn, String[] mataKuliahDiampu) {
+        super(username, password, nama);
+        this.nidn = nidn;
+        this.mataKuliahDiampu = mataKuliahDiampu;
+        this.nilaiMahasiswa = new int[mataKuliahDiampu.length][][]; // INISIALISASI ARRAY NILAI MAHASISWA SESUAI PANJANG LIST MATA KULIAH
+    }
+    // CONSTRUCTOR TANPA LIST MATA KULIAH
+    public Dosen(String username, String password, String nama, String nidn) {
+        super(username, password, nama);
+        this.nidn = nidn;
     }
 
-    public void inputNilai() {
-        // belum diisi
+    // HELPER METHOD
+    // CARI INDEX MATA KULIAH DARI STRING MATA KULIAH
+    private int cariIndexMataKuliah(String mataKuliah) {
+        for (int i = 0; i < mataKuliahDiampu.length; i++) {
+            if (mataKuliahDiampu[i].equalsIgnoreCase(mataKuliah)) {
+                return i;
+            }
+        }
+        return -1; // JIKA TIDAK DITEMUKAN
+    }
+    // TAMBAH MATA KULIAH BARU, KEMUDIAN PANJANGKAN ARRAY NILAI MAHASISWA
+    private void tambahMataKuliah(String mataKuliah) {
+        // TAMBAHKAN MATA KULIAH BARU KE LIST MATA KULIAH
+        mataKuliahDiampu = Arrays.copyOf(mataKuliahDiampu, mataKuliahDiampu.length + 1);
+        mataKuliahDiampu[mataKuliahDiampu.length - 1] = mataKuliah;
+        // PANJANGKAN ARRAY NILAI MAHASISWA SESUAI PANJANG LIST MATA KULIAH
+        nilaiMahasiswa = Arrays.copyOf(nilaiMahasiswa, mataKuliahDiampu.length);
     }
 
+    // SETTERS
+    // SETTER LIST MATA KULIAH
+    public void setMataKuliahDiampu(String[] mataKuliahDiampu) {
+        this.mataKuliahDiampu = mataKuliahDiampu;
+        this.nilaiMahasiswa = new int[mataKuliahDiampu.length][][]; // INISIALISASI ARRAY NILAI MAHASISWA SESUAI PANJANG LIST MATA KULIAH
+    }
+    // SETTER DATA NILAI MAHASISWA SESUAI FORMAT
+    public void setNilaiMahasiswa(int[][][] nilaiMahasiswa) {
+        // CEK APAKAH PANJANG ARRAY NILAI MAHASISWA SESUAI DENGAN PANJANG LIST MATA KULIAH
+        if (mataKuliahDiampu != null && nilaiMahasiswa.length != mataKuliahDiampu.length) {
+            throw new IllegalArgumentException("Panjang array nilai mahasiswa harus sama dengan panjang list mata kuliah");
+        }
+        this.nilaiMahasiswa = nilaiMahasiswa;
+    }
+
+    // GETTERS
+    public String getNidn() {
+        return nidn;
+    }
+    public String[] getMataKuliahDiampu() {
+        return mataKuliahDiampu;
+    }
+    public int[][] getNilaiMahasiswa(String mataKuliah) {
+        // CARI INDEX MATA KULIAH
+        int indexMatKul = cariIndexMataKuliah(mataKuliah);
+        // JIKA INDEX -1 MAKA MATA KULIAH TIDAK DITEMUKAN
+        if (indexMatKul == -1) {
+            System.out.println(mataKuliah + " tidak ditemukan.");
+            return null;
+        }
+        // RETURN ARRAY NILAI MAHASISWA UNTUK MATA KULIAH INI
+        // FORMAT NIM, TUGAS, UTS, UAS
+        return nilaiMahasiswa[indexMatKul];
+    }
+    
+    // viewNilai() DULUAN KARENA inputNilai() SANGAT RIBET
+    // OVERRIDING METHOD viewNilai() DARI SUPER CLASS PENGGUNA
+    // viewNilai() MODE PRINT SEMUAHH
     public void viewNilai() {
-        // belum diisi
+        // CEK APAKAH DATA NILAI ADA
+        if (nilaiMahasiswa == null) {
+            System.out.println("Belum ada data nilai mahasiswa.");
+            return;
+        }
+        // TAMPILKAN SEMUA DATA NILAI MENGGUNAKAN OVERLOADING METHOD viewNilai(String mataKuliah)
+        for (int i = 0; i < mataKuliahDiampu.length; i++) {
+            viewNilai(mataKuliahDiampu[i]);
+        }
+    }
+    // viewNilai() MODE MATA KULIAH TERTENTU
+    public void viewNilai(String mataKuliah) {
+        // CARI INDEX MATA KULIAH
+        int indexMatKul = cariIndexMataKuliah(mataKuliah);
+        // JIKA INDEX -1 MAKA MATA KULIAH TIDAK DITEMUKAN
+        if (indexMatKul == -1) {
+            System.out.println(mataKuliah + " tidak ditemukan.");
+            return;
+        }
+        // CEK APAKAH ADA DATA NILAI UNTUK MATA KULIAH INI
+        if (nilaiMahasiswa[indexMatKul] == null) {
+            System.out.println(mataKuliah + " belum memiliki data nilai.");
+            return;
+        }
+        // TAMPILKAN NILAI MAHASISWA UNTUK MATA KULIAH INI
+        System.out.println(mataKuliah + ":");
+        System.out.println("NIM, TUGAS, UTS, UAS");
+        for (int[] baris : nilaiMahasiswa[indexMatKul]) {
+            System.out.println(baris[0] + ", " + baris[1] + ", " + baris[2] + ", " + baris[3]);
+        }
+    }
+
+    // inputNilai() MODE INSTAN SEKALIGUS, LANGSUNG ISI DENGAN ARRAY YANG SESUAI FORMAT
+    public void inputNilai(String mataKuliah, int[][] nilaiMahasiswa) {
+        // CARI INDEX MATA KULIAH
+        int indexMatKul = cariIndexMataKuliah(mataKuliah);
+        // JIKA INDEX -1 MAKA MATA KULIAH TIDAK DITEMUKAN, TAMBAHKAN MATA KULIAH INI KE LIST MATA KULIAH
+        if (indexMatKul == -1) {
+            // TAMBAHKAN MATA KULIAH BARU KE LIST MATA KULIAH
+            tambahMataKuliah(mataKuliah); // CODE REUSE
+            // SET indexMatKul KE INDEX TERBARU
+            indexMatKul = mataKuliahDiampu.length - 1;
+        }
+        // SIMPAN DATA NILAI MAHASISWA UNTUK MATA KULIAH INI
+        this.nilaiMahasiswa[indexMatKul] = nilaiMahasiswa;
+    }
+    // inputNilai() VERSI SATU MAHASISWA AJA
+    public void inputNilai(String mataKuliah, int nim, int tugas, int uts, int uas) {
+        // CARI INDEX MATA KULIAH
+        int indexMatKul = cariIndexMataKuliah(mataKuliah);
+        // JIKA INDEX -1 MAKA MATA KULIAH TIDAK DITEMUKAN, TAMBAHKAN MATA KULIAH INI KE LIST MATA KULIAH
+        if (indexMatKul == -1) {
+            tambahMataKuliah(mataKuliah); // CODE REUSE
+            // SET indexMatKul KE INDEX TERBARU
+            indexMatKul = mataKuliahDiampu.length - 1;
+        }
+        // JIKA INDEX -1 MAKA MATA KULIAH TIDAK DITEMUKAN
+        if (indexMatKul == -1) {
+            System.out.println(mataKuliah + " tidak ditemukan.");
+            return;
+        }
+        // CEK APAKAH ADA DATA NILAI UNTUK MATA KULIAH INI
+        if (nilaiMahasiswa[indexMatKul] == null) {
+            nilaiMahasiswa[indexMatKul] = new int[1][4];
+            nilaiMahasiswa[indexMatKul][0][0] = nim;
+            nilaiMahasiswa[indexMatKul][0][1] = tugas;
+            nilaiMahasiswa[indexMatKul][0][2] = uts;
+            nilaiMahasiswa[indexMatKul][0][3] = uas;
+        } else {
+            // TAMBAHKAN DATA NILAI MAHASISWA BARU KE ARRAY YANG SUDAH ADA
+            int[][] temp = new int[nilaiMahasiswa[indexMatKul].length + 1][4];
+            for (int i = 0; i < nilaiMahasiswa[indexMatKul].length; i++) {
+                temp[i] = nilaiMahasiswa[indexMatKul][i];
+            }
+            temp[temp.length - 1][0] = nim;
+            temp[temp.length - 1][1] = tugas;
+            temp[temp.length - 1][2] = uts;
+            temp[temp.length - 1][3] = uas;
+            nilaiMahasiswa[indexMatKul] = temp;
+        }
     }
 }
