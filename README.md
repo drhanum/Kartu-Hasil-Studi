@@ -2,6 +2,15 @@ Tentu. Di bawah ini adalah **README lengkap versi panduan anggota kelompok** yan
 
 # README — Sistem Kartu Hasil Studi (KHS) Java
 
+## Pembagian Tugas
+
+| No. | Topik | Nama |
+|---|---|---|
+| 1 | Class Pengguna | Anggota 1 |
+| 2 | Class Dosen | Anggota 2 |
+| 3 | Class Mahasiswa | Anggota 3 |
+| 4 | Class Main & Pengelola Data | Hanum |
+
 ## 1. Deskripsi Proyek
 
 **Sistem Kartu Hasil Studi (KHS)** adalah aplikasi berbasis Java untuk mengelola data akademik mahasiswa, dosen, mata kuliah, nilai, dan KHS.
