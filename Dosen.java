@@ -1,3 +1,32 @@
+/*
+DESKRIPSI KELAS DOSEN
+EXTENDS Pengguna
+ATRIBUTES:
+- nidn: Nomer Induk Dosen Nasional
+- mataKuliahDiampu: Array string yang berisi matkul-matkul yang diampu oleh dosen
+- nilaiMahasiswa: Array integer 3D yang menyimpan nilai mahasiswa per mata kuliah
+    FORMAT: [indexMataKuliah][indexMahasiswa][0:NIM, 1:TUGAS, 2:UTS, 3:UAS]
+CONSTRUCTORS
+- Dosen(String username, String password, String nama, String nidn, String[] mataKuliahDiampu, int[][][] nilaiMahasiswa)
+- Dosen(String username, String password, String nama, String nidn, String[] mataKuliahDiampu)
+- Dosen(String username, String password, String nama, String nidn)
+HELPER METHODS
+- cariIndexMataKuliah(String mataKuliah)
+- tambahMataKuliah(String mataKuliah)
+SETTERS
+- setMataKuliahDiampu(String[] mataKuliahDiampu)
+- setNilaiMahasiswa(int[][][] nilaiMahasiswa)
+GETTERS
+- getNidn()
+- getMataKuliahDiampu()
+- getNilaiMahasiswa(String mataKuliah)
+FEATURE METHODS
+- OVERRIDE viewNilai()
+- OVERLOAD viewNilai(String mataKuliah)
+- OVERLOAD inputNilai(String mataKuliah, int[][] nilaiMahasiswa)
+- OVERLOAD inputNilai(String mataKuliah, int nim, int tugas, int uts, int uas)
+ */
+
 import java.util.Arrays;
 
 public class Dosen extends Pengguna {
