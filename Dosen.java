@@ -1,7 +1,8 @@
 /*
-DESKRIPSI KELAS DOSEN
+DAFTAR ISI
+
 EXTENDS Pengguna
-ATRIBUTES:
+ATRIBUTES
 - nidn: Nomer Induk Dosen Nasional
 - mataKuliahDiampu: Array string yang berisi matkul-matkul yang diampu oleh dosen
 - nilaiMahasiswa: Array integer 3D yang menyimpan nilai mahasiswa per mata kuliah
