@@ -1,75 +1,107 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Mahasiswa extends Pengguna {
-
-    // Attribute
-    private final Scanner scanner;
     private String nim;
-    private String programStudi;
+    private String prodi;
 
-    // Constructor
-    public Mahasiswa(String nim, String nama, String programStudi) {
-        super(nim, "", nama);
-        this.scanner = new Scanner(System.in);
+    public Mahasiswa(String username, String password, String nama, String nim, String prodi) {
+        super(username, password, nama);
         this.nim = nim;
-        this.programStudi = programStudi;
+        this.prodi = prodi;
     }
 
-    public Mahasiswa(String nama, String email, String nim, String programStudi) {
-        this(nim, nama, programStudi);
+    public String getNim() { return nim; }
+    public void setNim(String nim) { this.nim = nim; }
+
+    public String getProdi() { return prodi; }
+    public void setProdi(String prodi) { this.prodi = prodi; }
+
+    // Loop menu mahasiswa. Berhenti saat logout.
+    public void tampilkanMenuMahasiswa(PengelolaData pd) {
+        Scanner sc = pd.getScanner();
+        while (true) {
+            System.out.println("\n=== MENU MAHASISWA (" + getNama() + ") ===");
+            System.out.println("1. Req KHS");
+            System.out.println("2. Logout");
+            System.out.print("Pilih: ");
+            String pilihan = sc.nextLine().trim();
+
+            switch (pilihan) {
+                case "1" -> tampilkanNilai(pd);
+                case "2" -> {
+                    System.out.println("Logout berhasil."); return;
+                }
+                default -> System.out.println("Pilihan tidak valid.");
+            }
+        }
     }
 
-    // Method
-    public void requestKHS() {
-        System.out.println("\n=== REQUEST KHS ===");
-        System.out.println("Pilih Periode:");
-        System.out.println("1. 2026/2027 - Ganjil");
-        System.out.println("2. 2026/2027 - Genap");
-        System.out.println("3. 2025/2026 - Genap");
-        System.out.print("Pilihan: ");
-
-        int pilihan = scanner.nextInt();
-        String periode = "";
-
-        switch (pilihan) {
-            case 1:
-                periode = "2026/2027 - Ganjil";
-                break;
-            case 2:
-                periode = "2026/2027 - Genap";
-                break;
-            case 3:
-                periode = "2025/2026 - Genap";
-                break;
-            default:
+    @Override
+    public void tampilkanNilai(PengelolaData pd) {
+        Scanner sc = pd.getScanner();
+        List<String> periode = pd.getDaftarPeriode(nim);
+ 
+        while (true) {
+            System.out.println("\nPilih periode:");
+            for (int i = 0; i < periode.size(); i++) {
+                System.out.println((i + 1) + ". " + periode.get(i));
+            }
+            System.out.println("x. Keluar");
+            System.out.print("Pilih: ");
+            String input = sc.nextLine().trim();
+            if (input.equalsIgnoreCase("x")) return;   // kembali ke menu mahasiswa
+ 
+            int idx;
+            try {
+                idx = Integer.parseInt(input) - 1;
+            } catch (NumberFormatException e) {
+                idx = -1;
+            }
+            if (idx < 0 || idx >= periode.size()) {
                 System.out.println("Pilihan tidak valid.");
-                return;
+                continue;
+            }
+            cetakKhs(pd, periode.get(idx));
+        }
+    }
+
+
+
+    // Cetak KHS satu periode, termasuk jumlah SKS dan IPS.
+    private void cetakKhs(PengelolaData pd, String periode) {
+        List<PengelolaData.Krs> daftar = pd.getKrsByPeriode(nim, periode);
+
+        System.out.println("\n========== KARTU HASIL STUDI ==========");
+        System.out.println("Nama    : " + getNama());
+        System.out.println("NIM     : " + nim);
+        System.out.println("Periode : " + periode);
+        System.out.println("---------------------------------------");
+        System.out.printf("%-32s %-6s %3s %7s %6s %5s%n", "Mata Kuliah", "Kode", "SKS", "N.Mutu", "Bobot", "Grade");
+
+        int jumlahSks = 0;
+        int sksTernilai = 0;       // SKS dari matkul yang sudah dinilai (untuk IPS)
+        double totalMutu = 0;      // sum(bobot), bobot = SKS x nilai mutu
+
+        for (PengelolaData.Krs k : daftar) {
+            jumlahSks += k.getSks();
+            if (k.isSudahDinilai()) {
+                sksTernilai += k.getSks();
+                totalMutu += k.getBobot();
+                System.out.printf("%-32s %-6s %3d %7.2f %6.2f %5s%n", k.getNamaMatkul(), k.getKodeMatkul(),
+                        k.getSks(), k.getNilaiMutu(), k.getBobot(), k.getGrade());
+            } else {
+                System.out.printf("%-32s %-6s %3d %7s %6s %5s%n", k.getNamaMatkul(), k.getKodeMatkul(),
+                        k.getSks(), "-", "-", "-");
+            }
         }
 
-        System.out.println("Permintaan KHS untuk mahasiswa dengan NIM " + nim
-                + " dan periode " + periode + " telah diajukan.");
-    }
-
-    // Overriding: mengganti method viewNilai() dari class Pengguna
-    @Override
-    public void viewNilai() {
-        viewNilai("Mahasiswa dengan NIM " + nim + " pada periode yang diminta");
-    }
-
-    // Overloading: method viewNilai() dengan parameter periode
-    public void viewNilai(String periode) {
-        System.out.println("=== NILAI KHS ===");
-        System.out.println("Nama    : " + nama);
-        System.out.println("NIM     : " + nim);
-        System.out.println("Program Studi : " + programStudi);
-        System.out.println("Periode : " + periode);
-        System.out.println("-------------------------------------------------");
-        System.out.printf("%-35s %-7s %-5s\n", "Mata Kuliah", "Grade", "Mutu");
-        System.out.println("-------------------------------------------------");
-
-        System.out.printf("%-35s %-7s %-5.1f\n", "Pemrograman Berorientasi Objek", "AB", 3.5);
-        System.out.printf("%-35s %-7s %-5.1f\n", "Basis Data", "A", 4.0);
-        System.out.printf("%-35s %-7s %-5.1f\n", "Sistem Operasi", "B", 3.0);
-        System.out.println("-------------------------------------------------");
+        double ips = (sksTernilai == 0) ? 0 : totalMutu / sksTernilai;
+        System.out.println("---------------------------------------");
+        System.out.println("Jumlah SKS : " + jumlahSks);
+        System.out.printf("IPS        : %.2f%n", ips);
+        if (sksTernilai < jumlahSks) {
+            System.out.println("(IPS hanya dihitung dari matkul yang sudah dinilai)");
+        }
     }
 }
