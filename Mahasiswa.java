@@ -37,6 +37,7 @@ public class Mahasiswa extends Pengguna {
         }
     }
 
+    // Override
     @Override
     public void tampilkanNilai(PengelolaData pd) {
         Scanner sc = pd.getScanner();
@@ -62,27 +63,25 @@ public class Mahasiswa extends Pengguna {
                 System.out.println("Pilihan tidak valid.");
                 continue;
             }
-            cetakKhs(pd, periode.get(idx));
+            tampilkanNilai(pd, periode.get(idx));   // memakai overload per periode
         }
     }
-
-
-
-    // Cetak KHS satu periode, termasuk jumlah SKS dan IPS.
-    private void cetakKhs(PengelolaData pd, String periode) {
+ 
+    // Overload
+    public void tampilkanNilai(PengelolaData pd, String periode) {
         List<PengelolaData.Krs> daftar = pd.getKrsByPeriode(nim, periode);
-
+ 
         System.out.println("\n========== KARTU HASIL STUDI ==========");
         System.out.println("Nama    : " + getNama());
         System.out.println("NIM     : " + nim);
         System.out.println("Periode : " + periode);
         System.out.println("---------------------------------------");
         System.out.printf("%-32s %-6s %3s %7s %6s %5s%n", "Mata Kuliah", "Kode", "SKS", "N.Mutu", "Bobot", "Grade");
-
+ 
         int jumlahSks = 0;
         int sksTernilai = 0;       // SKS dari matkul yang sudah dinilai (untuk IPS)
         double totalMutu = 0;      // sum(bobot), bobot = SKS x nilai mutu
-
+ 
         for (PengelolaData.Krs k : daftar) {
             jumlahSks += k.getSks();
             if (k.isSudahDinilai()) {
@@ -95,7 +94,7 @@ public class Mahasiswa extends Pengguna {
                         k.getSks(), "-", "-", "-");
             }
         }
-
+ 
         double ips = (sksTernilai == 0) ? 0 : totalMutu / sksTernilai;
         System.out.println("---------------------------------------");
         System.out.println("Jumlah SKS : " + jumlahSks);
@@ -105,3 +104,4 @@ public class Mahasiswa extends Pengguna {
         }
     }
 }
+ 

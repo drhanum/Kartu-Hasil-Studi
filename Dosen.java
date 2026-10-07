@@ -41,22 +41,32 @@ public class Dosen extends Pengguna {
     }
 
     // View nilai per mata kuliah: nama, NIM, tugas, UTS, UAS, total nilai, grade.
+    // Override
     @Override
     public void tampilkanNilai(PengelolaData pd) {
         for (String kode : listMatkulDiampu) {
-            System.out.println("\n[" + kode + "] " + pd.getNamaMatkul(kode));
-            System.out.printf("%-20s %-9s %7s %7s %7s %7s %-5s%n",
-                    "Nama", "NIM", "Tugas", "UTS", "UAS", "Total", "Grade");
-            for (PengelolaData.Krs k : pd.getKrsByMatkul(kode)) {
-                String nama = pd.getNamaMahasiswa(k.getNim());
-                if (k.isSudahDinilai()) {
-                    System.out.printf("%-20s %-9s %7.1f %7.1f %7.1f %7.2f %-5s%n", nama, k.getNim(),
-                            k.getNilaiTugas(), k.getNilaiUts(), k.getNilaiUas(),
-                            k.getNilaiAkhir(), k.getGrade());
-                } else {
-                    System.out.printf("%-20s %-9s %7s %7s %7s %7s %-5s%n", nama, k.getNim(),
-                            "-", "-", "-", "-", "-");
-                }
+            tampilkanNilai(pd, kode);   // memakai overload per mata kuliah
+        }
+    }
+ 
+    // Overload
+    public void tampilkanNilai(PengelolaData pd, String kodeMatkul) {
+        if (!listMatkulDiampu.contains(kodeMatkul)) {
+            System.out.println("Mata kuliah " + kodeMatkul + " tidak diampu oleh dosen ini.");
+            return;
+        }
+        System.out.println("\n[" + kodeMatkul + "] " + pd.getNamaMatkul(kodeMatkul));
+        System.out.printf("%-20s %-9s %7s %7s %7s %7s %-5s%n",
+                "Nama", "NIM", "Tugas", "UTS", "UAS", "Total", "Grade");
+        for (PengelolaData.Krs k : pd.getKrsByMatkul(kodeMatkul)) {
+            String nama = pd.getNamaMahasiswa(k.getNim());
+            if (k.isSudahDinilai()) {
+                System.out.printf("%-20s %-9s %7.1f %7.1f %7.1f %7.2f %-5s%n", nama, k.getNim(),
+                        k.getNilaiTugas(), k.getNilaiUts(), k.getNilaiUas(),
+                        k.getNilaiAkhir(), k.getGrade());
+            } else {
+                System.out.printf("%-20s %-9s %7s %7s %7s %7s %-5s%n", nama, k.getNim(),
+                        "-", "-", "-", "-", "-");
             }
         }
     }
