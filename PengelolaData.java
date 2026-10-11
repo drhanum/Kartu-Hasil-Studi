@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class PengelolaData {
 
-    // DATA DUMMY KRS (nested class)
+    //KRS 
     public static class Krs {
         private final String nim;
         private final String tahunAjaran;   // contoh: "2025/2026"
@@ -34,7 +34,7 @@ public class PengelolaData {
             this.nidnDosen = nidnDosen;
         }
 
-        /** 50% tugas, 25% UTS, 25% UAS, grade, nilai mutu, bobot. */
+        // Hitung total nilai (50% tugas, 25% UTS, 25% UAS), grade, nilai mutu, bobot
         private void isiNilai(double tugas, double uts, double uas) {
             this.nilaiTugas = tugas;
             this.nilaiUts = uts;
@@ -69,10 +69,11 @@ public class PengelolaData {
         public boolean isSudahDinilai() { return sudahDinilai; }
     }
 
-    // DATA DUMMY
+    // Daftar data
     private final List<Mahasiswa> daftarMahasiswa = new ArrayList<>();
     private final List<Dosen> daftarDosen = new ArrayList<>();
     private final List<Krs> daftarKrs = new ArrayList<>();
+
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -80,12 +81,12 @@ public class PengelolaData {
         isiDataDummy();
     }
 
-    // Inisialisasi data dummy
+    // Inisialisasi data 
     private void isiDataDummy() {
         // Mahasiswa: username, password, nama, nim, prodi
         daftarMahasiswa.add(new Mahasiswa("20255520001", "Naomi001", "Naomi", "20255520001", "Informatika"));
-        daftarMahasiswa.add(new Mahasiswa("20255520002", "Citra001", "Citra Lestari", "20255520002", "Informatika"));
-        daftarMahasiswa.add(new Mahasiswa("20255520003", "Dewi001", "Dewi Anggraini", "20255520003", "Sistem Informasi"));
+        daftarMahasiswa.add(new Mahasiswa("20255520002", "Theo001", "Theophilus", "20255520002", "Informatika"));
+        daftarMahasiswa.add(new Mahasiswa("20255520003", "Christian001", "Christian", "20255520003", "Informatika"));
 
         // Dosen: username, password, nama, nidn, daftar kode matkul yang diampu
         List<String> matkulAry = new ArrayList<>();
@@ -94,28 +95,33 @@ public class PengelolaData {
 
         List<String> matkulSimon = new ArrayList<>();
         matkulSimon.add("IF102"); matkulSimon.add("IF104");
-        daftarDosen.add(new Dosen("IFD002", "Sari002", "Simon Barus", "IFD002", matkulSimon));
+        daftarDosen.add(new Dosen("IFD002", "Simon002", "Simon Barus", "IFD002", matkulSimon));
 
-        // KRS (nilai awal kosong/0)
-        String[] nim = {"20255520001", "20255520002", "20255520003"};
-        for (String n : nim) {
-            // 2025/2026 ganjil
-            daftarKrs.add(new Krs(n, "2025/2026", "ganjil", "IF101", "Algoritma dan Pemrograman", 3, "0411001"));
-            daftarKrs.add(new Krs(n, "2025/2026", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "0411002"));
-            // 2025/2026 genap
-            daftarKrs.add(new Krs(n, "2025/2026", "genap", "IF103", "Basis Data", 3, "0411001"));
-            daftarKrs.add(new Krs(n, "2025/2026", "genap", "IF104", "Struktur Data", 4, "0411002"));
-        }
-        // 2026/2027 ganjil
-        daftarKrs.add(new Krs("20255520001", "2026/2027", "ganjil", "IF103", "Basis Data", 3, "0411001"));
-        daftarKrs.add(new Krs("20255520002", "2026/2027", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "0411002"));
+        // KRS (nilai awal kosong/0), ditulis manual per mahasiswa
+        // Format: nim, tahun ajaran, semester, kode matkul, nama matkul, sks, nidn dosen
 
-        // Contoh nilai awal buat nyoba
-        // updateNilai(daftarKrs.get(0), 85, 80, 90);
-        // updateNilai(daftarKrs.get(1), 75, 70, 72);
+        // KRS Naomi (20255520001)
+        daftarKrs.add(new Krs("20255520001", "2025/2026", "ganjil", "IF101", "Algoritma dan Pemrograman", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520001", "2025/2026", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "IFD002"));
+        daftarKrs.add(new Krs("20255520001", "2025/2026", "genap", "IF103", "Basis Data", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520001", "2025/2026", "genap", "IF104", "Struktur Data", 4, "IFD002"));
+        daftarKrs.add(new Krs("20255520001", "2026/2027", "ganjil", "IF103", "Basis Data", 3, "IFD001"));
+
+        // KRS Theophilus (20255520002) 
+        daftarKrs.add(new Krs("20255520002", "2025/2026", "ganjil", "IF101", "Algoritma dan Pemrograman", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520002", "2025/2026", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "IFD002"));
+        daftarKrs.add(new Krs("20255520002", "2025/2026", "genap", "IF103", "Basis Data", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520002", "2025/2026", "genap", "IF104", "Struktur Data", 4, "IFD002"));
+        daftarKrs.add(new Krs("20255520002", "2026/2027", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "IFD002"));
+
+        // KRS Christian (20255520003) 
+        daftarKrs.add(new Krs("20255520003", "2025/2026", "ganjil", "IF101", "Algoritma dan Pemrograman", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520003", "2025/2026", "ganjil", "IF102", "Pemrograman Berorientasi Objek", 3, "IFD002"));
+        daftarKrs.add(new Krs("20255520003", "2025/2026", "genap", "IF103", "Basis Data", 3, "IFD001"));
+        daftarKrs.add(new Krs("20255520003", "2025/2026", "genap", "IF104", "Struktur Data", 4, "IFD002"));
     }
 
-    // ===================== Login =====================
+    // Login 
     // Validasi login
     public Pengguna login(String username, String password) {
         for (Mahasiswa m : daftarMahasiswa) {
@@ -127,10 +133,10 @@ public class PengelolaData {
         return null;
     }
 
-    // ===================== Pengambilan data =====================
+    // Pengambilan data
     public Scanner getScanner() { return scanner; }
 
-    // Nama mata kuliah berdasarkan kode
+    // Nama mata kuliah berdasarkan kode.
     public String getNamaMatkul(String kodeMatkul) {
         for (Krs k : daftarKrs) {
             if (k.getKodeMatkul().equals(kodeMatkul)) return k.getNamaMatkul();
@@ -145,7 +151,7 @@ public class PengelolaData {
         return "-";
     }
 
-    // Semua KRS (mahasiswa) untuk satu mata kuliah
+    // Semua KRS (mahasiswa) untuk satu mata kuliah. */
     public List<Krs> getKrsByMatkul(String kodeMatkul) {
         List<Krs> hasil = new ArrayList<>();
         for (Krs k : daftarKrs) {
@@ -154,7 +160,7 @@ public class PengelolaData {
         return hasil;
     }
 
-    // Daftar periode unik
+    // Daftar periode unik 
     public List<String> getDaftarPeriode(String nim) {
         List<String> hasil = new ArrayList<>();
         for (Krs k : daftarKrs) {
@@ -172,8 +178,8 @@ public class PengelolaData {
         return hasil;
     }
 
-    // ===================== Update nilai =====================
-    // Simpan nilai tugas, UTS, UAS; nilai akhir/grade/bobot dihitung otomatis
+    //  Update nilai
+    // Simpan nilai tugas, UTS, UAS; nilai akhir/grade/bobot dihitung otomatis.
     public void updateNilai(Krs krs, double tugas, double uts, double uas) {
         krs.isiNilai(tugas, uts, uas);
     }
