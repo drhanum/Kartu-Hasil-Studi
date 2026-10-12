@@ -73,8 +73,6 @@ public class PengelolaData {
     private final List<Mahasiswa> daftarMahasiswa = new ArrayList<>();
     private final List<Dosen> daftarDosen = new ArrayList<>();
     private final List<Krs> daftarKrs = new ArrayList<>();
-
-
     private final Scanner scanner = new Scanner(System.in);
 
     public PengelolaData() {
